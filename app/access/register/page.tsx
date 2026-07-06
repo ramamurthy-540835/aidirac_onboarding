@@ -1,42 +1,80 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Card } from "@/components/Card";
 import { EmailInput } from "@/components/EmailInput";
 import { FormField } from "@/components/FormField";
+import { OrganizationReviewMessage } from "@/components/OrganizationReviewMessage";
 import { PageContainer } from "@/components/PageContainer";
 import { PrimaryButton } from "@/components/PrimaryButton";
-
-function validateEmail(value: string) {
-  if (!value.trim()) {
-    return "Email is required.";
-  }
-
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-    return "Enter a valid email address.";
-  }
-
-  return "";
-}
+import { getEmailDomain, getEmailFlow } from "@/utils/emailDomain";
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [organization, setOrganization] = useState("");
   const [errors, setErrors] = useState({ fullName: "", email: "" });
   const [submitted, setSubmitted] = useState(false);
+  const [organizationDomain, setOrganizationDomain] = useState("");
+  const [supportMessage, setSupportMessage] = useState("");
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const emailFlow = getEmailFlow(email);
 
     const nextErrors = {
       fullName: fullName.trim() ? "" : "Full name is required.",
-      email: validateEmail(email),
+      email:
+        emailFlow === "invalid"
+          ? email.trim()
+            ? "Enter a valid email address."
+            : "Email is required."
+          : "",
     };
 
     setErrors(nextErrors);
-    setSubmitted(!nextErrors.fullName && !nextErrors.email);
+
+    if (nextErrors.fullName || nextErrors.email) {
+      setSubmitted(false);
+      setOrganizationDomain("");
+      setSupportMessage("");
+      return;
+    }
+
+    setSupportMessage("");
+
+    if (emailFlow === "organization") {
+      setSubmitted(false);
+      setOrganizationDomain(getEmailDomain(email));
+      return;
+    }
+
+    setOrganizationDomain("");
+    setSubmitted(true);
+  }
+
+  if (organizationDomain) {
+    return (
+      <PageContainer
+        eyebrow="Access Registration"
+        title="Create an access profile"
+        description="Public email registration stays in the frontend flow. Company domains are routed to ClientEdge review."
+      >
+        <OrganizationReviewMessage
+          domain={organizationDomain}
+          supportMessage={supportMessage}
+          onBackToLogin={() => router.push("/access/login")}
+          onContactSupport={() =>
+            setSupportMessage(
+              "Support contact is mocked in this frontend phase. No email was sent."
+            )
+          }
+        />
+      </PageContainer>
+    );
   }
 
   return (
