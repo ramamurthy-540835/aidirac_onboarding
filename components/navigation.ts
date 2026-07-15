@@ -25,6 +25,12 @@ export const navigationItems: NavigationItemConfig[] = [
     marker: "WS",
   },
   {
+    href: "/pricing",
+    label: "Pricing",
+    description: "Plans, tokens, and subscription tiers",
+    marker: "PX",
+  },
+  {
     href: "/agents",
     label: "Agents",
     description: "Multi-agent control center",
