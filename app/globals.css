@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  --background: #080b12;
-  --foreground: #f8fafc;
-  --font-geist-sans: "Inter", "Segoe UI", Arial, Helvetica, sans-serif;
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --font-geist-sans: "Inter", "IBM Plex Sans", "Segoe UI", Arial, Helvetica, sans-serif;
   --font-geist-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 }
 
@@ -14,6 +14,10 @@
   --font-mono: var(--font-geist-mono);
 }
 
+html {
+  background: #ffffff;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -21,15 +25,15 @@ body {
 }
 
 ::selection {
-  background: rgba(103, 232, 249, 0.28);
-  color: #ffffff;
+  background: rgba(37, 99, 235, 0.18);
+  color: #0f172a;
 }
 
 * {
-  scrollbar-color: rgba(148, 163, 184, 0.35) transparent;
+  scrollbar-color: rgba(100, 116, 139, 0.35) transparent;
 }
 
 :where(a, button, input, select, textarea):focus-visible {
-  outline: 2px solid rgba(103, 232, 249, 0.85);
+  outline: 2px solid rgba(37, 99, 235, 0.9);
   outline-offset: 2px;
 }

@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
-import { Header } from "@/components/Header";
-import { Sidebar } from "@/components/Sidebar";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "AIDIRAC Access Layer | PRISM AI Workspace",
+  title: "AIDIRAC - Enterprise AI Intelligence Platform",
   description:
-    "Foundation frontend for the AIDIRAC Access Layer in the PRISM AI Workspace Platform.",
+    "AIDIRAC subscription portal for enterprise AI intelligence, multi-model access, agentic workflows, governance, and security.",
 };
 
 export default function RootLayout({
@@ -16,17 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full antialiased">
-      <body className="min-h-full bg-[#080b12] text-slate-100">
-        <div className="flex min-h-dvh">
-          <Sidebar />
-          <div className="flex min-w-0 flex-1 flex-col">
-            <Header />
-            <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
-              {children}
-            </main>
-          </div>
-        </div>
-      </body>
+      <body className="min-h-full bg-white text-slate-950">{children}</body>
     </html>
   );
 }
