@@ -5,24 +5,45 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { Footer } from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
-import { loginPortalUser } from "@/utils/portalAuth";
+import { loginPortalUser, savePortalSession, type PortalUser } from "@/utils/portalAuth";
 
 export default function LoginPage() {
   const router = useRouter();
   const [error, setError] = useState("");
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setError("");
     const data = new FormData(event.currentTarget);
     const email = String(data.get("email") ?? "");
     const password = String(data.get("password") ?? "");
-    const session = loginPortalUser(email, password);
+    let session = loginPortalUser(email, password);
 
     if (!session) {
-      setError("Invalid email or password for this browser session.");
-      return;
+      const adminResponse = await fetch("/api/auth/admin-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      if (!adminResponse.ok) {
+        setError("Invalid email or password.");
+        return;
+      }
+      const payload = await adminResponse.json() as { user: PortalUser };
+      session = savePortalSession(payload.user);
     }
 
+    if (session.user.role === "admin") {
+      const adminResponse = await fetch("/api/auth/admin-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...session.user, password }),
+      });
+      if (!adminResponse.ok) {
+        setError("This account is not provisioned for the admin console.");
+        return;
+      }
+    }
     router.push(session.user.role === "admin" ? "/admin" : "/subscription");
   }
 

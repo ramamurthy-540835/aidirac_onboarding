@@ -8,7 +8,7 @@ import { Navbar } from "@/components/Navbar";
 import { registerPortalUser } from "@/utils/portalAuth";
 import type { SubscriptionPlan } from "@/utils/subscriptionTypes";
 
-const roles = ["Developer", "Business", "Client", "Admin"];
+const roles = ["Developer", "Business", "Client"];
 const tokenFormatter = new Intl.NumberFormat("en-US");
 
 export default function SignupPage() {
@@ -133,7 +133,7 @@ export default function SignupPage() {
             <Field label="Full Name" name="fullName" autoComplete="name" />
             <Field label="Email" name="email" type="email" autoComplete="email" />
             <Field label="Password" name="password" type="password" autoComplete="new-password" />
-            <Field label="Organization" name="organization" autoComplete="organization" />
+            <Field label="Organization" name="organization" autoComplete="organization" defaultValue="AIDIRAC" />
             <label className="grid gap-2 text-sm font-medium text-slate-700">
               Role
               <select name="role" className="h-11 rounded-sm border border-slate-300 bg-white px-3 text-slate-950">
@@ -148,7 +148,7 @@ export default function SignupPage() {
                 <p className="text-sm font-semibold text-slate-950">Choose subscription plan</p>
                 <p className="mt-1 text-sm text-slate-600">This selection is saved through the backend into BigQuery.</p>
               </div>
-              {plansStatus === "loading" ? <span className="text-xs text-slate-500">Loading plans</span> : null}
+              {plansStatus === "loading" ? <span className="text-xs text-slate-500">Loading plans…</span> : null}
             </div>
 
             {plansStatus === "error" ? (
@@ -224,11 +224,29 @@ function PlanOption({
   );
 }
 
-function Field({ label, name, type = "text", autoComplete }: { label: string; name: string; type?: string; autoComplete?: string }) {
+function Field({
+  label,
+  name,
+  type = "text",
+  autoComplete,
+  defaultValue,
+}: {
+  label: string;
+  name: string;
+  type?: string;
+  autoComplete?: string;
+  defaultValue?: string;
+}) {
   return (
     <label className="grid gap-2 text-sm font-medium text-slate-700">
       {label}
-      <input name={name} type={type} autoComplete={autoComplete} className="h-11 rounded-sm border border-slate-300 px-3 text-slate-950" />
+      <input
+        name={name}
+        type={type}
+        autoComplete={autoComplete}
+        defaultValue={defaultValue}
+        className="h-11 rounded-sm border border-slate-300 px-3 text-slate-950"
+      />
     </label>
   );
 }

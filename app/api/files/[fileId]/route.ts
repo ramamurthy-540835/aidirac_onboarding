@@ -1,0 +1,4 @@
+import { requireUserWorkspace, userWorkspaceError } from "@/lib/user-workspace/auth";
+import { adapterTodo, deleteFile, fileById } from "@/lib/user-workspace/mutations";
+export async function GET(request: Request, context: { params: Promise<{ fileId: string }> }) { try { await requireUserWorkspace(request); const item = fileById((await context.params).fileId); return item ? Response.json({ data: item, source: "adapter", todo: adapterTodo }) : Response.json({ error: "File not found" }, { status: 404 }); } catch (error) { return userWorkspaceError(error); } }
+export async function DELETE(request: Request, context: { params: Promise<{ fileId: string }> }) { try { await requireUserWorkspace(request); return deleteFile((await context.params).fileId) ? Response.json({ data: { deleted: true }, source: "adapter", todo: adapterTodo }) : Response.json({ error: "File not found" }, { status: 404 }); } catch (error) { return userWorkspaceError(error); } }

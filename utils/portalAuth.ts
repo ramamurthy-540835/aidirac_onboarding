@@ -57,10 +57,18 @@ function toPortalUser(user: StoredUser): PortalUser {
   };
 }
 
+export function getPortalUsers(): PortalUser[] {
+  return readUsers().map(toPortalUser);
+}
+
 function saveSession(user: PortalUser) {
   const token = createJwt(user);
   window.localStorage.setItem(sessionKey, JSON.stringify({ token, user }));
   return { token, user };
+}
+
+export function savePortalSession(user: PortalUser) {
+  return saveSession(user);
 }
 
 export function registerPortalUser(input: {

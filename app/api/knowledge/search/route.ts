@@ -1,0 +1,2 @@
+import { requireUserWorkspace, userWorkspaceError } from "@/lib/user-workspace/auth";
+export async function POST(request: Request) { try { await requireUserWorkspace(request); const { query = "" } = await request.json() as { query?: string }; return Response.json({ data: [], source: "adapter", query, todo: "TODO(PRISM-API): connect enterprise retrieval service" }); } catch (error) { return userWorkspaceError(error); } }
